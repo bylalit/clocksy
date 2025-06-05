@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- link css -->
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Font Asowasm -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+
+    <section class="Nav">
+        <!-- Nav Bar -->
+        <nav class="navbar navbar-expand-lg py-4 position-fixed top-0 w-100 bg-white z-3 box shadow d-flex align-items-center justify-content-center shadow">
+            <div class="container">
+                <div class="row w-100 d-flex align-items-center">
+                    <div class="col-md-2">
+                        <div class="logo pe-5">
+                            <a href="{% url "index" %}">
+                                <img src="{% static "/images/logo.png" %}" alt="Titan Logo" class="img-fluid w-100">
+                            </a>
+                        </div>        
+                    </div>
+                    <div class="col-md-6">
+                        <div class="search pe-4 d-flex align-items-center">
+                            <form action="/search_data/" class='d-flex w-100' method='POST'>
+                                {% csrf_token %}
+                                <input type="text" class='w-100' name='search' placeholder="Search" >
+                                <button class='btn border'>Search</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 d-flex align-items-center justify-content-around">
+                        <div class="icon d-flex align-items-center">
+                            <div class="icon-item mx-3">
+                                <a href="{% url "account" %}" class="text-decoration-none text-black d-flex align-items-center flex-column">
+                                    <i class="fa-regular fa-user"></i>
+                                    <p class="m-0">Account</p>
+                                </a>    
+                            </div>
+                            <div class="icon-item mx-3">
+                                <a href="{% url "wishlist_view" %}" class="text-decoration-none text-black d-flex align-items-center flex-column">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <p class="m-0">WishList</p>
+                                </a>
+                            </div>
+                            <div class="icon-item mx-3 me-4">
+                                <a href="{% url "cart_view" %}" class="text-decoration-none text-black d-flex align-items-center flex-column">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <p class="m-0">Cart</p>
+                                </a>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <div
+                                  style="font-weight: 500; margin-left: 10px; color: #222; border: solid black 1px; padding: 10px; border-radius: 7px; ">
+                                  <a class="hov-btn3"
+                                    style="text-decoration: none; color: #222;  border-radius: 15px; padding: 8px;"
+                                    href="{% url 'logout_user' %}">Logout</a>
+                                </div>
+                            {% else %}
+                                <div style="font-weight: 500; margin-left: 5px; color: #222; border: solid black 1px; padding: 6px; border-radius: 7px; padding: 10px 0px ">
+                                    <a class=" hov-btn3" style="text-decoration: none; border-radius: 15px; padding: 8px; color: #222;"
+                                    href="{% url "login" %}" target="_blank">Login</a>
+                                    <span> / </span>
+                                    <a target="_blank"
+                                    class=" hov-btn3" style="text-decoration: none; color: #222;  border-radius: 15px; padding: 8px;"
+                                    href="{% url "register" %}">Register</a>
+                                </div>
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+    </section>
+
+    <section>
+        <!-- Nav Bar Menu -->
+        <nav class="menu w-100" style="margin-top: 100px;">
+            <div class="container">
+                <div class="row w-100">
+                    <div class="col-md-12 w-100 d-flex align-items-center justify-content-center py-4">
+                        {% for category in categories %}
+                            <div class="menu-item px-4">
+                                <a href="{% url "category" category.name %}" class="text-decoration-none text-black text-uppercase">{{ category.name }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+    </section>
+
+
+    {% block content %}    
+    {% endblock content %}
+
+
+    {% comment %} footer {% endcomment %}
+    <section>
+        <div class="footer pt-5 pb-3" style="background-color: rgb(0, 0, 0);">
+            <div class="container">
+                <div class="logo_image mb-5">
+                    <div class="logo">
+                        <a href="{% url "index" %}">
+                            <img src="{% static "/images/logo.png" %}" class="img-fluid" style='width: 200px;' alt="Titan Logo">
+                        </a>    
+                    </div>
+    
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="Brands">
+                            <h3 class="text-white mb-3">Brands</h3>
+                            <div class="Brands-list">
+                                <ul class="list-unstyled">
+                                    {% for b in brands  %}
+                                        <li class="mb-2"><a href="{% url "category_brand_only" b %}" class="text-white text-capitalize text-decoration-none">{{ b }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="Category">
+                            <h3 class="text-white mb-3">Category</h3>
+                            <div class="Brands-list">
+                                <ul class="list-unstyled">
+                                    {% for c in categories  %}
+                                        <li class="mb-2"><a href="{% url "category" c %}" class="text-white text-capitalize text-decoration-none">{{ c }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="Contect">
+                            <h3 class="text-white mb-3">Contect Us</h3>
+                            <div class="Brands-list">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">1800-1132-3425</a></li>
+                                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">clocksy@gamil.com</a></li>
+                                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Help & Support</a></li>
+                                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+                                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Contect Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-3">
+                        <div class="subscribe">
+                            <h3 class="text-white mb-3">Subscribe</h3>
+                            <div class="">
+                                <form action="">
+                                    <input type="email" class="form-control mb-2 text-white border-none" style="background-color: transparent; border: none; border: 2px solid #a77018; outline: none;" placeholder="Enter Your Email" required>
+                                    <button type="submit" class="btn mt-3 btn-outline-none text-white fw-bold" style="background-color:#a77018 ;">Subscribe</button>
+                                </form>
+                                
+                            </div>
+                            <div class="icon-social mt-4">
+                                <a href="" class="text-decoration-none">
+                                    <i class="fa-brands fs-3 me-3 fa-twitter text-white"></i>
+                                </a>
+                                <a href="" class="text-decoration-none">
+                                    <i class="fa-brands fs-3 text-white me-3 fa-facebook"></i>
+                                </a>
+                                <a href="" class="text-decoration-none">
+                                    <i class="fa-brands fs-3 fa-instagram text-white"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copy-right">
+                    <hr class="text-white my-4">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="" class="me-2 text-decoration-none">
+                                <img src="{% static "/images/payment/icon-pay-01.png" %}" alt="image">
+                            </a>
+                            <a href="" class="me-2 text-decoration-none">
+                                <img src="{% static "/images/payment/icon-pay-02.png" %}" alt="image">
+                            </a>
+                            <a href="" class="me-2 text-decoration-none">
+                                <img src="{% static "/images/payment/icon-pay-03.png" %}" alt="image">
+                            </a>
+                            <a href="" class="me-2 text-decoration-none">
+                                <img src="{% static "/images/payment/icon-pay-04.png" %}" alt="image">
+                            </a>
+                            <a href="" class="me-2 text-decoration-none">
+                                <img src="{% static "/images/payment/icon-pay-05.png" %}" alt="image">
+                            </a>
+                        </div>
+                        <div class="col-md-12 mt-3 text-center">
+                            <p class="text-white">Copyright © 2025 Clocksy All Rights Reserved | Made with <i class="fa-regular fa-heart text-success"></i> by <span class="text-success">Clocksy Web Team</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- link js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+</body>
+</html>
+

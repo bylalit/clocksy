@@ -1,0 +1,56 @@
+{% comment %} <form>
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ key }}"
+        data-amount="{{ payment.amount }}"
+        data-currency="INR"
+        data-order_id="{{ payment.id }}"
+        data-buttontext="Pay Now"
+        data-name="Test Payment"
+        data-description="Django Razorpay Test"
+        data-prefill.name="Test User"
+        data-prefill.email="test@example.com"
+        data-theme.color="#F37254">
+    </script>
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+ {% endcomment %}
+
+
+<form id="razorpay-form" action="/payment-success/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="order_id" value="{{ order_id }}">
+</form>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            var options = {
+                "key": "{{ razorpay_key }}",
+                "amount": 50000,  // Amount in paise (₹500.00)
+                "currency": "INR",
+                "name": "My Site",
+                "description": "Test Payment",
+                "order_id": "{{ order_id }}",
+                "theme": {
+                    "color": "#F37254"
+                },
+                "handler": function (response) {
+                    // Auto-submit form after successful payment
+                    document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
+                    document.getElementById("razorpay-form").submit();
+                }
+            };
+
+            var rzp1 = new Razorpay(options);
+            rzp1.open();  // Auto-trigger payment popup
+        }, 2000);  // Delay 2 seconds before auto-trigger
+    });
+</script>
+

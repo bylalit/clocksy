@@ -1,0 +1,599 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+
+
+    {% comment %} <section>
+        <!-- Nav Bar Menu -->
+        <nav class="menu w-100" style="margin-top: 100px;">
+            <div class="container">
+                <div class="row w-100">
+                    <div class="col-md-12 w-100 d-flex align-items-center justify-content-center py-4">
+                        {% for category in categories %}
+                            <div class="menu-item px-4">
+                                <a href="{% url "category" category.name %}" class="text-decoration-none text-black text-uppercase">{{ category.name }}</a>
+                            </div>
+                        {% endfor %}
+                        <div class="menu-item px-4">
+                            <a href="#" class="text-decoration-none text-black text-uppercase">More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+    </section> {% endcomment %}
+
+
+    <section class="mb-5 mt-2 img-slider">
+        <div class="container-fluid carousel slider position-relative" id="carouselExampleIndicators" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="2000">
+                    <a href="{% url "category" "Wall clock" %}">
+                        <img src="{% static "/images/slider/Clocks_upto30_D.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/slider/IB_JanSale_FY25_D.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "Smart Watches" %}">
+                        <img src="{% static "/images/slider/Smart_home_feb_d.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/slider/SmartVday_Feb_D.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "Women" %}">
+                        <img src="{% static "/images/slider/Raga30_JanSale_FY25_D.jpg" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "couple watch" %}">
+                        <img src="{% static "/images/slider/VDaySale2060_D_310124.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "couple watch" %}">
+                        <img src="{% static "/images/slider/WW50_D.webp" %}" class="d-block w-100"  alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/slider/NebulaMen_D.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Custom Previous Button -->
+            <button class="carousel-control-prev position-absolute start-0 top-50 translate-middle-y" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" style="transform: translateX(-50%);">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+        
+            <!-- Custom Next Button -->
+            <button class="carousel-control-next position-absolute end-0 top-50 translate-middle-y" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" style="transform: translateX(50%);">
+            <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+        
+        </div>
+    </section>
+
+    <section class="poster mt-5 pt-5 px-5 pb-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 pb-4">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/poster/TrendingFinal_Men_D.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <a href="{% url "category" "Women" %}">
+                        <img src="{% static "/images/poster/TrendingFinal_Women_D.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="my-5 img-slider">
+        <div class="container carousel slider px-5 position-relative" id="carouselExampleIndicatorsss" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="2000">
+                    <a href="#">
+                        <img src="{% static "/images/slider/BFLBanner_D.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="#">
+                        <img src="{% static "/images/slider/Simpl_d_1312.jpg" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="#">
+                        <img src="{% static "/images/slider/Snapmint_d_0125.webp" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <a href="#">
+                        <img src="{% static "/images/slider/SBI_Banner_D-v1.jpg" %}" class="d-block w-100" alt="image"="...">
+                    </a>
+                </div>
+            </div>
+        
+            <!-- Custom Previous Button -->
+            <button class="carousel-control-prev position-absolute start-0 top-50 translate-middle-y" type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide="prev" style="transform: translateX(-50%);">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+        
+            <!-- Custom Next Button -->
+            <button class="carousel-control-next position-absolute end-0 top-50 translate-middle-y" type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide="next" style="transform: translateX(50%);">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+        
+            <div class="carousel-indicators" style="bottom: -50px;">
+            <button type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide-to="0" class="active bg-dark" style="border-radius: 100%; width: 10px; height: 10px;" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide-to="1" aria-label="Slide 2" style="border-radius: 100%; width: 10px; height: 10px;" class="bg-dark"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide-to="2" aria-label="Slide 3" class="bg-dark" style="border-radius: 100%; width: 10px; height: 10px;"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicatorsss" data-bs-slide-to="3" aria-label="Slide 4" class="bg-dark" style="border-radius: 100%; width: 10px; height: 10px;"></button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="products px-5 pt-5">
+
+        <div class="container pb-4">
+            <h4 class="title text-center text-uppercase fs-2">THE BEST WAY TO BUY THE PRODUCTS YOU LOVE</h4>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 mb-5">
+                    <a href="{% url "category" "Men" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/men_.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Men</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "Women" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/women.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Women</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "Smart Watches" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/couple.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Smart Watches</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "Kids" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/kids.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Kids</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{% url "category" "Premium Watches" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/New_Arrivals_thumb.jpg" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Premium Watches</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "Gifting" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/ragaB.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Gifting</h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "couple watch" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/luxe.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">couple watch </h5>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-3">
+                    <a href="{% url "category" "Wall clock" %}" class="text-decoration-none text-dark">
+                        <img src="{% static "/images/products/clock.webp" %}" class="img-fluid" alt="image"="">
+                        <h5 class="text-center fs-4 my-1 text-uppercase">Wall clock</h5>
+                    </a>
+                </div>
+                {% comment %} <div class="col-6 col-md-4 col-lg-2">
+                    <a href="#" class="text-decoration-none text-dark">
+                    <img src="{% static "/images/products/Smart_thumb.webp" %}" class="img-fluid" alt="image"="">
+                    <h5 class="text-center">Smart</h5>
+                    </a>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </section>
+
+    <section class="new-arrivel p-5">
+
+        <div class="container pb-4">
+            <h4 class="title text-center text-uppercase fs-2">NEW ARRIVALS</h4>
+        </div>
+
+        <div class="container-fluid">
+            <div id="multiImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    
+                    <!-- Slide 1 -->
+                    <div class="carousel-item data-bs-interval=3000 active">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/NA_Wedding_D.jpg" %}" class="d-block w-100" alt="image"="Image 4">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/Stellar_D.jpg" %}" class="d-block w-100" alt="image"="Image 5">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/Memoir_D.webp" %}" class="d-block w-100" alt="image"="Image 2">
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item data-bs-interval=3000">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/RagaSilver_D.webp" %}" class="d-block w-100" alt="image"="Image 4">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/NA_Zoop_D.webp" %}" class="d-block w-100" alt="image"="Image 5">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/NewArrivals_Smart_CrownCollection_D.jpg" %}" class="d-block w-100" alt="image"="Image 2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-item data-bs-interval=3000">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/NA_Showstopper_D-v1.jpg" %}" class="d-block w-100" alt="image"="Image 3">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/Memoir_D.webp" %}" class="d-block w-100" alt="image"="Image 1">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/new-arrivel/NA_ceramic_D-v1.webp" %}" class="d-block w-100" alt="image"="Image 2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-4" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#multiImageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-4" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <main class="my-5 brands py-4">
+        <div class="container">
+            <h4 class="title text-center text-uppercase fs-2 pt-2 pb-5">Shop By Brands</h4>
+        </div>
+        <div class="container-fluid px-5">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "titan" %}">
+                        <img src="{% static "/images/TitanSBDesktop.webp" %}" alt="image"="" class="img-fluid"> 
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "raga" %}">
+                        <img src="{% static "/images/Anne-K_desktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "fastrack" %}">
+                        <img src="{% static "/images/Brand_Edge_D.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "police" %}">
+                        <img src="{% static "/images/Brand_Nebula_D.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "sonata" %}">
+                        <img src="{% static "/images/Coach_desktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "anne klean" %}">
+                        <img src="{% static "/images/fastrackdesktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "Rolex" %}">
+                        <img src="{% static "/images/KC_D.jpg" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "anne klean" %}">
+                        <img src="{% static "/images/Police_desktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "sonata" %}">
+                        <img src="{% static "/images/sonatadesktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "police" %}">
+                        <img src="{% static "/images/tommydesktop.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "raga" %}">
+                        <img src="{% static "/images/Xylys-Mobile-v1.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category_brand_only" "titan" %}">
+                        <img src="{% static "/images/Zoop-Mobile-v1.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main class="my-2 movement  pb-1">
+        <div class="container">
+            <h4 class="title text-center text-uppercase fs-2 pt-2 pb-5">Movement in Time</h4>
+        </div>
+
+        <div class="container-fluid px-5">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 pb-5 d-flex justify-content-center align-items-center">
+                    <a href="{% url "category" "Men" %}" class='img-fluid'>
+                        <img src="{% static "/images/MechanicalE.webp" %}" alt="image"="" class="img-fluid"> 
+                    </a>
+                </div>
+                <div class="col-md-6 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 pb-4 d-flex justify-content-center align-items-center">
+                            <a href="{% url "category" "Men" %}">
+                                <img src="{% static "/images/Automatic.webp" %}" alt="image"="" class="img-fluid"> 
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-sm-6 pb-4 d-flex justify-content-center align-items-center">
+                            <a href="{% url "category" "Men" %}">
+                                <img src="{% static "/images/Quartz.jpg" %}" alt="image"="" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-sm-6 pb-4 d-flex justify-content-center align-items-center">
+                            <a href="{% url "category" "Men" %}">
+                                <img src="{% static "/images/Chronograph.webp" %}" alt="image"="" class="img-fluid"> 
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-sm-6 pb-4 d-flex justify-content-center align-items-center">
+                            <a href="{% url "category" "Smart Watches" %}">
+                                <img src="{% static "/images/Smart.webp" %}" alt="image"="" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+        
+
+    <main class="mt-2 latest_product">
+        <div class="container">
+            <h4 class="title text-center text-uppercase fs-2 pt-1 pb-4">Latest Product</h4>
+        </div>
+
+        <div class="container mb-0">
+            <div class="row">
+                
+                {% for product in products %}
+                    <div class="col-md-3 p-3">
+                        <div class="card product-card">
+                            <div class="position-relative">
+                                {% comment %} <span class="sale-badge">SALE</span> {% endcomment %}
+                                <a href="{% url "singal_product" product.id %}">
+                                    <img src="{{  product.image1.url  }}" class="card-img-top" alt="Product Image">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="card-title text-capitalize">{{ product.brand }} | {{  product.category }}'s Watch</h6>
+                                    {% comment %} <span class="wishlist-ico">
+                                        <i class="fa-regular fa-heart fs-5" style="cursor: pointer;" onclick="this.style.color = 'red';"></i>
+                                    </span> {% endcomment %}
+                                    <span class="wishlist-ico">
+                                        <a href="{% url "add_to_wishlist" product.id %}">
+                                            <i class="fa-regular fa-heart fs-5" style="cursor: pointer;" id="heart_icon" onclick="toggleHeart(this)"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                                <p class="card-text text-muted">{{ product.description | slice:":50" }}... </p>
+                                <h5 class="text-dark">₹ {{  product.price }} 
+                                    {% comment %} <small class="text-muted text-decoration-line-through">₹ 7,765</small> <span class="text-success">20% off</span> {% endcomment %}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <script>
+                    function toggleHeart(icon) {
+                        icon.classList.toggle("fa-solid");  // Toggle to solid heart
+                        icon.classList.toggle("text-danger"); // Bootstrap ka red color
+                    }
+                </script>
+    
+            </div>
+        </div>
+    </main>
+
+
+    <section class="brand p-5 mb-4">
+        <div class="container pb-4">
+            <h4 class="title text-center text-uppercase fs-2">Discover Your Style</h4>
+        </div>
+
+        <div class="container-fluid">
+            <div id="multiImageCarousell" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    
+                    <!-- Slide 1 -->
+                    <div class="carousel-item data-bs-interval=3000 active">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Bold_D.webp" %}" class="d-block w-100" alt="image"="Image 1">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Couple_D.webp" %}" class="d-block w-100" alt="image"="Image 2">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Luxe_D.webp" %}" class="d-block w-100" alt="image"="Image 3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item data-bs-interval=3000">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Minimal_D.webp" %}" class="d-block w-100" alt="image"="Image 4">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Sporty_D.webp" %}" class="d-block w-100" alt="image"="Image 5">
+                            </div>
+                            <div class="col-4">
+                                <img src="{% static "/images/poster/Discover_Couple_D.webp" %}" class="d-block w-100" alt="image"="Image 2">
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#multiImageCarousell" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-4" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#multiImageCarousell" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-4" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    
+    <main class="my-2 collection pb-2">
+        <div class="container">
+            <h4 class="title text-center text-uppercase fs-2 pt-2 pb-3">Collection</h4>
+        </div>
+
+        <div class="container-fluid px-5 pb-4">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/collection/WorkwearWD.jpg" %}" alt="image"="" class="img-fluid"> 
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="#">
+                        <img src="{% static "/images/collection/WorkwearNTD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category" "Women" %}">
+                        <img src="{% static "/images/collection/RagaWD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="#">
+                        <img src="{% static "/images/collection/RagaNTD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="#">
+                        <img src="{% static "/images/collection/GrandmasterNATD.jpg" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/collection/GrandWD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="#">
+                        <img src="{% static "/images/collection/MaritimeTD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 pb-4">
+                    <a href="{% url "category" "Men" %}">
+                        <img src="{% static "/images/collection/MaritimeWD.webp" %}" alt="image"="" class="img-fluid">
+                    </a>
+                </div>
+        </div>
+    </main>
+
+
+    <section class="features">
+        <main class="my-5 features pb-4">
+            <div class="container px-5">
+                <div class="row text-center py-4">
+                    <div class="col-md-4">
+                        <img src="{% static "/images/icon/Gurantee.svg" %}" class="img-fluid" alt="image"="">
+                        <h4 class="fs-5">100% ORIGINAL</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="{% static "/images/icon/return.svg" %}" class="img-fluid" alt="image"="">
+                        <h4 class="fs-5">30 DAYS RETURN</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="{% static "/images/icon/Shipping.svg" %}" class="img-fluid" alt="image"="">
+                        <h4 class="fs-5">FREE SHIPPING</h4>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+
+    {% if not user.is_authenticated %}
+        <section class="login-btn">
+            <main class="my-4 login-btn py-5">
+
+                <div class="title text-center pb-4">
+                    <h4 class="fs-3">LOGIN FOR THE BEST EXPERIENCE</h4>
+                </div>
+                <div class="button text-center pb-4">
+                    <a href="{% url "login" %}" class="fw-semibold text-white text-decoration-none" style="background-color: #c48d35; color: black; border: none; padding: 15px 25px;">LOGIN NOW</a>
+                </div>
+                <div class="text-center">
+                    <a href="{% url "register" %}" class="fw-semibold text-dark">Create An Account</a>
+                </div>
+            </main>
+        </section>    
+    {% endif %}
+
+
+{% endblock %}
+
+

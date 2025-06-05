@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+
+<section class="card-page my-5" style="">
+    <div class="container mt-3 mb-4">
+        <a href="{% url "index" %}" class="text-decoration-none text-black">Home</a> 
+        <span> > </span>
+        <a href="#" class="text-decoration-none text-black text-muted">
+            Wish List
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+
+                {% for key, item in wishcart.items %}
+                    <div class="cart">
+                        <div class="card mb-3">
+                            <div class="row g-0">
+
+                                <div class="col-md-3 d-flex align-items-center justify-content-center">
+                                    <a href="{% url "singal_product" key %}" class='text-center'>
+                                        <img src="{{ item.image }}" class="img-fluid rounded-start image-fluid w-50" alt="..." />
+                                    </a>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-2 text-muted text-capitalize">
+                                                {{ c.brand }}
+                                            </p>
+                                            <a href="{% url "remove_from_wishlist" key %}" class="cross text-dark">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </a>
+                                        </div>
+                                        <h6 class="title">
+                                            {{ item.name }}
+                                        </h6>
+                                        <div>
+                                            <span class="fs-5 fw-bold">Rs. {{ item.price }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-center gap-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% static "/images/icon/returnCart.svg" %}" class="me-2 image-fluid" alt="">
+                                            <p class="mb-0">7 Days Product Deliver</p>
+                                        </div>
+                                    </div>                                
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
