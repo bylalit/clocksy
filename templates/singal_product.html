@@ -1,0 +1,369 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Section & Container Background */
+    .single-product-section {
+        background-color: #f8fafc;
+    }
+    
+    /* Main Product Image Container */
+    .main-img-box {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 380px;
+    }
+    .main-img-box img {
+        max-height: 320px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    /* Thumbnails */
+    .thumb-img-box {
+        background-color: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .thumb-img-box:hover, .thumb-img-box.active-thumb {
+        border-color: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+    .thumb-img-box img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    /* Action Buttons */
+    .btn-cart {
+        background-color: #0f172a;
+        color: #ffffff;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+    .btn-cart:hover {
+        background-color: #1e293b;
+        color: #ffffff;
+    }
+    .btn-buy {
+        background-color: #2563eb;
+        color: #ffffff;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+    .btn-buy:hover {
+        background-color: #1d4ed8;
+        color: #ffffff;
+    }
+
+    /* Features Grid */
+    .feature-box {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 0.5rem;
+    }
+    .feature-item img {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 6px;
+    }
+
+    /* Related Product Card (Category Page Match) */
+    .product-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        transition: all 0.25s ease-in-out;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+    
+    .product-img-box {
+        position: relative;
+        background-color: #f1f5f9;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        overflow: hidden;
+    }
+    .product-img-box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-img-box img {
+        transform: scale(1.05);
+    }
+
+    /* Wishlist Floating Button */
+    .wishlist-btn-floating {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        text-decoration: none;
+    }
+    .wishlist-btn-floating:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<section class="single-product-section py-4 min-vh-100">
+    <div class="container">
+        
+        <!-- Breadcrumb Bar -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'category' products.category %}" class="text-decoration-none text-muted">{{ products.category }}'s</a></li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">{{ products.name|slice:":30" }}...</li>
+            </ol>
+        </nav>
+
+        <!-- Main Product Section -->
+        <div class="row g-4 align-items-start mb-5">
+            
+            <!-- Left Column: Gallery & Images -->
+            <div class="col-lg-6">
+                <div class="main-img-box shadow-sm mb-3">
+                    <img src="{{ products.image1.url }}" id="mainImage" class="img-fluid" alt="{{ products.name }}">
+                </div>
+                
+                <!-- Thumbnails Carousel/Grid -->
+                <div class="row g-2 justify-content-center">
+                    {% if products.image1 %}
+                    <div class="col-3">
+                        <div class="thumb-img-box active-thumb" onclick="changeImage('{{ products.image1.url }}', this)">
+                            <img src="{{ products.image1.url }}" class="img-fluid" alt="Thumbnail 1">
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if products.image2 %}
+                    <div class="col-3">
+                        <div class="thumb-img-box" onclick="changeImage('{{ products.image2.url }}', this)">
+                            <img src="{{ products.image2.url }}" class="img-fluid" alt="Thumbnail 2">
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if products.image3 %}
+                    <div class="col-3">
+                        <div class="thumb-img-box" onclick="changeImage('{{ products.image3.url }}', this)">
+                            <img src="{{ products.image3.url }}" class="img-fluid" alt="Thumbnail 3">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column: Product Info & Actions -->
+            <div class="col-lg-6">
+                <div class="ps-lg-3">
+                    
+                    <!-- Brand & Tag -->
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle text-uppercase fw-semibold px-2 py-1" style="font-size: 0.75rem;">
+                            {{ products.brand }}
+                        </span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle fw-semibold px-2 py-1" style="font-size: 0.75rem;">
+                            Best Seller
+                        </span>
+                    </div>
+
+                    <!-- Product Name -->
+                    <h3 class="fw-bold mb-2" style="color: #0f172a;">{{ products.name }}</h3>
+
+                    <!-- Specs Subtitle & Wishlist -->
+                    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
+                        <span class="text-muted small">Model: 1806NM01 | {{ products.category }}'s Watch</span>
+                        
+                        <!-- Dynamic Red/Outline Wishlist Button -->
+                        <a href="{% url 'add_to_wishlist' products.id %}"
+                        class="btn border rounded-pill d-inline-flex align-items-center gap-2 px-3 py-1 bg-white shadow-sm text-decoration-none">
+
+                            <i class="{% if products.id in wishlist_ids %}fa-solid text-danger{% else %}fa-regular text-secondary{% endif %} fa-heart fs-6"></i>
+
+                            <span class="small fw-semibold text-dark">
+                                {% if products.id in wishlist_ids %}
+                                    Wishlisted
+                                {% else %}
+                                    Add to Wishlist
+                                {% endif %}
+                            </span>
+
+                        </a>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="fs-2 fw-extrabold" style="color: #0f172a;">₹ {{ products.price }}</span>
+                            <span class="text-muted small">Inclusive of all taxes*</span>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-dark mb-1">Product Description</h6>
+                        <p class="text-muted small lh-relaxed mb-0">{{ products.description }}</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <a href="{% url 'add_to_cart' products.id %}" class="btn btn-cart w-100 py-3 rounded-3 fw-bold text-uppercase fs-6 d-inline-flex align-items-center justify-content-center gap-2">
+                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'add_to_cart' products.id %}" class="btn btn-buy w-100 py-3 rounded-3 fw-bold text-uppercase fs-6 d-inline-flex align-items-center justify-content-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Buy Now
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Features Grid -->
+                    <div class="feature-box shadow-sm">
+                        <div class="row text-center g-2">
+                            <div class="col feature-item">
+                                <img src="{% static '/images/icon/usp-warranty-d.svg' %}" alt="Warranty">
+                                <h6 class="fw-semibold text-dark mb-0" style="font-size: 11px;">24 Months<br>Warranty</h6>
+                            </div>
+                            <div class="col feature-item border-start">
+                                <img src="{% static '/images/icon/usp-shipping-d.svg' %}" alt="Shipping">
+                                <h6 class="fw-semibold text-dark mb-0" style="font-size: 11px;">Free Shipping<br>Countrywide</h6>
+                            </div>
+                            <div class="col feature-item border-start">
+                                <img src="{% static '/images/icon/usp-return-d.svg' %}" alt="Return">
+                                <h6 class="fw-semibold text-dark mb-0" style="font-size: 11px;">Easy<br>Return</h6>
+                            </div>
+                            <div class="col feature-item border-start">
+                                <img src="{% static '/images/icon/usp-pod-d.svg' %}" alt="POD">
+                                <h6 class="fw-semibold text-dark mb-0" style="font-size: 11px;">Pay on Delivery<br>Available</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Related Products Section (Category Page Match) -->
+<section class="py-5 bg-white border-top">
+    <div class="container">
+        
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h4 class="fw-bold text-dark mb-1">Related Products</h4>
+                <p class="text-muted small mb-0">Discover similar styles you might love</p>
+            </div>
+            <a href="{% url 'category' products.category %}" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-semibold">View All</a>
+        </div>
+
+        <div class="row g-4">
+            {% for product in related_products %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="product-card">
+                    
+                    <!-- Image & Wishlist Button -->
+                    <div class="product-img-box">
+                            <a href="{% url 'add_to_wishlist' product.id %}"
+                            class="wishlist-btn-floating"
+                            title="Add to Wishlist">
+
+                                <i class="fa-heart fs-6 {% if product.id in wishlist_ids %}fa-solid text-danger{% else %}fa-regular text-secondary{% endif %}"></i>
+                            </a>
+
+                            <a href="{% url 'singal_product' product.id %}" class="d-block w-100 h-100">
+                                <img src="{{ product.image1.url }}" alt="{{ product.brand }} {{ product.category }}">
+                            </a>
+                        </div>
+
+                    <!-- Card Body -->
+                    <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between">
+                        <div>
+                            <!-- Brand & Category Subtitle -->
+                            <div class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                {{ product.brand }} | {{ product.category }}'s Watch
+                            </div>
+                            
+                            <!-- Product Title -->
+                            <h6 class="fw-semibold text-dark mb-2 text-truncate" title="{{ product.description }}">
+                                <a href="{% url 'singal_product' product.id %}" class="text-decoration-none text-dark">
+                                    {{ product.description|slice:":45" }}{% if product.description|length > 45 %}...{% endif %}
+                                </a>
+                            </h6>
+                        </div>
+
+                        <!-- Price & Quick Action -->
+                        <div class="pt-2 mt-auto border-top d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="fs-5 fw-bold text-dark">₹ {{ product.price }}</span>
+                            </div>
+                            <a href="{% url 'singal_product' product.id %}" class="btn btn-sm btn-outline-dark rounded-2 px-2 py-1 fw-semibold">
+                                View Details
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<!-- Image Switcher Script -->
+<script>
+    function changeImage(imageSrc, element) {
+        document.getElementById('mainImage').src = imageSrc;
+        
+        let thumbs = document.querySelectorAll('.thumb-img-box');
+        thumbs.forEach(thumb => thumb.classList.remove('active-thumb'));
+        
+        element.classList.add('active-thumb');
+    }
+</script>
+
+{% endblock %}

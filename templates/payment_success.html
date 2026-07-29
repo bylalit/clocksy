@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .success-page {
+        background-color: #f8fafc;
+    }
+
+    .success-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Icon Badge Animation Box */
+    .success-icon-box {
+        width: 100px;
+        height: 100px;
+        background-color: #dcfce7;
+        color: #16a34a;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 10px rgba(220, 252, 231, 0.5);
+    }
+
+    /* Order Details Container */
+    .order-details-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.5rem;
+    }
+
+    .btn-gold-action {
+        background-color: #d97706;
+        color: #ffffff;
+        font-weight: 700;
+        border: none;
+        border-radius: 50rem;
+        padding: 0.75rem 2rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-gold-action:hover {
+        background-color: #b45309;
+        color: #ffffff;
+        box-shadow: 0 6px 16px rgba(217, 119, 6, 0.25);
+    }
+
+    .btn-outline-custom {
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
+        font-weight: 600;
+        border-radius: 50rem;
+        padding: 0.75rem 2rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-outline-custom:hover {
+        background-color: #0f172a;
+        color: #ffffff;
+        border-color: #0f172a;
+    }
+</style>
+
+<section class="success-page py-5 min-vh-100 d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+
+                <!-- Success Card -->
+                <div class="success-card p-4 p-sm-5 text-center">
+
+                    <!-- Animated Success Badge -->
+                    <div class="mb-4">
+                        <div class="success-icon-box">
+                            <i class="fa-solid fa-check display-5"></i>
+                        </div>
+                    </div>
+
+                    <!-- Heading -->
+                    <h3 class="fw-bold mb-2" style="color: #0f172a;">Payment Successful!</h3>
+                    <p class="text-muted small mb-4">
+                        Thank you for your purchase. Your order has been placed and is being processed for delivery.
+                    </p>
+
+                    <!-- Order Details Summary Grid -->
+                    <div class="order-details-box text-start mb-4">
+                        <div class="row g-3">
+                            
+                            <div class="col-6">
+                                <span class="text-muted small d-block mb-1">Order Reference</span>
+                                <strong class="fs-6" style="color: #0f172a;">#{{ order.id }}</strong>
+                            </div>
+
+                            <div class="col-6">
+                                <span class="text-muted small d-block mb-1">Total Amount</span>
+                                <strong class="fs-6 text-primary">₹{{ order.total_amount }}</strong>
+                            </div>
+
+                            <div class="col-6 border-top pt-2">
+                                <span class="text-muted small d-block mb-1">Payment Status</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold px-2 py-1">
+                                    <i class="fa-solid fa-circle-check me-1"></i>{{ order.status }}
+                                </span>
+                            </div>
+
+                            <div class="col-6 border-top pt-2">
+                                <span class="text-muted small d-block mb-1">Confirmation Email</span>
+                                <span class="fw-semibold text-dark small text-truncate d-block" title="{{ order.email }}">
+                                    {{ order.email }}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                        <a href="{% url 'index' %}" class="btn btn-gold-action d-inline-flex align-items-center gap-2">
+                            <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+                        </a>
+
+                        <a href="{% url 'account' %}" class="btn btn-outline-custom d-inline-flex align-items-center gap-2">
+                            <i class="fa-regular fa-user"></i> View Account
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

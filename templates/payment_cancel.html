@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .cancel-page {
+        background-color: #f8fafc;
+    }
+
+    .cancel-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Icon Badge Animation Box */
+    .cancel-icon-box {
+        width: 100px;
+        height: 100px;
+        background-color: #fee2e2;
+        color: #ef4444;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 10px rgba(254, 226, 226, 0.5);
+    }
+
+    /* Message Callout Box */
+    .status-info-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.25rem;
+    }
+
+    .btn-gold-action {
+        background-color: #d97706;
+        color: #ffffff;
+        font-weight: 700;
+        border: none;
+        border-radius: 50rem;
+        padding: 0.75rem 2rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-gold-action:hover {
+        background-color: #b45309;
+        color: #ffffff;
+        box-shadow: 0 6px 16px rgba(217, 119, 6, 0.25);
+    }
+
+    .btn-outline-custom {
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
+        font-weight: 600;
+        border-radius: 50rem;
+        padding: 0.75rem 2rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-outline-custom:hover {
+        background-color: #0f172a;
+        color: #ffffff;
+        border-color: #0f172a;
+    }
+</style>
+
+<section class="cancel-page py-5 min-vh-100 d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+
+                <!-- Cancel Card -->
+                <div class="cancel-card p-4 p-sm-5 text-center">
+
+                    <!-- Warning Badge Icon -->
+                    <div class="mb-4">
+                        <div class="cancel-icon-box">
+                            <i class="fa-solid fa-xmark display-5"></i>
+                        </div>
+                    </div>
+
+                    <!-- Heading -->
+                    <h3 class="fw-bold mb-2" style="color: #0f172a;">Payment Cancelled</h3>
+                    <p class="text-muted small mb-4">
+                        Your transaction was not completed. Don't worry—no payment was deducted.
+                    </p>
+
+                    <!-- Status Info Box -->
+                    <div class="status-info-box text-start mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-white p-2 rounded-circle border text-warning shadow-sm">
+                                <i class="fa-solid fa-bag-shopping fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark small">Your Cart is Safe</h6>
+                                <p class="text-muted small mb-0">All your selected luxury watches remain saved in your shopping bag.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                        <a href="{% url 'payment' %}" class="btn btn-gold-action d-inline-flex align-items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Try Again
+                        </a>
+
+                        <a href="{% url 'cart_view' %}" class="btn btn-outline-custom d-inline-flex align-items-center gap-2">
+                            <i class="fa-solid fa-cart-shopping"></i> Back to Cart
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

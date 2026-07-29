@@ -1,0 +1,272 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .wishlist-page {
+        background-color: #f8fafc;
+    }
+    .wishlist-card {
+        transition: all 0.25s ease-in-out;
+        border: 1px solid #e2e8f0 !important;
+    }
+    .wishlist-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+        border-color: #cbd5e1 !important;
+    }
+    .btn-add-cart {
+        background-color: #2563eb;
+        color: #ffffff;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+    .btn-add-cart:hover {
+        background-color: #1d4ed8;
+        color: #ffffff;
+    }
+    .btn-remove {
+        color: #94a3b8;
+        transition: all 0.2s ease;
+    }
+    .btn-remove:hover {
+        color: #ef4444;
+    }
+    .product-img-wrapper {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 12px;
+    }
+</style>
+
+<section class="wishlist-page py-5 min-vh-100">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}" class="text-decoration-none text-secondary">
+                        Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item active fw-semibold text-dark">
+                    Wishlist
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1">My Wishlist</h3>
+                <p class="text-muted small mb-0">
+                    Manage items you've saved for later
+                </p>
+            </div>
+
+            <span class="badge rounded-pill bg-white text-dark border px-3 py-2 fs-6 shadow-sm">
+                {{ wishlist|length }}
+                {% if wishlist|length == 1 %}
+                    Item
+                {% else %}
+                    Items
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Wishlist Items -->
+            <div class="col-lg-8">
+
+                {% if wishlist %}
+
+                    {% for item in wishlist %}
+
+                    <div class="card wishlist-card bg-white rounded-3 mb-3 p-3">
+
+                        <div class="row g-3 align-items-center">
+
+                            <!-- Image -->
+                            <div class="col-4 col-sm-3 col-md-2">
+
+                                <div class="product-img-wrapper text-center border">
+
+                                    <a href="{% url 'singal_product' item.product.id %}">
+
+                                        <img src="{{ item.product.image1.url }}"
+                                             class="img-fluid object-fit-contain"
+                                             style="height:90px;width:100%;">
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Details -->
+                            <div class="col-8 col-sm-9 col-md-10">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <div>
+
+                                        <span class="badge bg-light text-primary border text-uppercase fw-semibold">
+                                            {{ item.product.brand.name }}
+                                        </span>
+
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                            In Stock
+                                        </span>
+
+                                        <h6 class="fw-bold mt-2">
+
+                                            <a href="{% url 'singal_product' item.product.id %}"
+                                               class="text-decoration-none text-dark">
+
+                                                {{ item.product.name }}
+
+                                            </a>
+
+                                        </h6>
+
+                                    </div>
+
+                                    <a href="{% url 'remove_from_wishlist' item.product.id %}"
+                                       class="btn btn-remove btn-sm rounded-circle">
+
+                                        <i class="fa-solid fa-trash-can"></i>
+
+                                    </a>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                    <h5 class="fw-bold mb-0">
+                                        Rs. {{ item.product.price }}
+                                    </h5>
+
+                                    <a href="{% url 'add_to_cart' item.product.id %}"
+                                       class="btn btn-add-cart">
+
+                                        <i class="fa-solid fa-cart-shopping"></i>
+
+                                        Add to Cart
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                <!-- Empty -->
+
+                <div class="card border-0 bg-white shadow-sm p-5 text-center rounded-3">
+
+                    <div class="mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+                             style="width:80px;height:80px;">
+                            <i class="fa-regular fa-heart display-6 text-muted"></i>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Your Wishlist is Empty
+                    </h5>
+
+                    <p class="text-muted">
+                        You haven't saved any items yet.
+                    </p>
+
+                    <a href="{% url 'index' %}"
+                       class="btn btn-primary rounded-pill px-4">
+
+                        Explore Products
+
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- Sidebar -->
+
+            {% if wishlist %}
+
+            <div class="col-lg-4">
+
+                <div class="card border-0 bg-white shadow-sm rounded-3 p-4">
+
+                    <h5 class="fw-bold mb-3">
+                        Order Perks
+                    </h5>
+
+                    <div class="d-flex mb-3">
+
+                        <div class="me-3">
+                            <i class="fa-solid fa-truck-fast fs-3 text-primary"></i>
+                        </div>
+
+                        <div>
+
+                            <h6>Fast Delivery</h6>
+
+                            <p class="text-muted small">
+                                Get your items delivered within 3-5 business days.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex">
+
+                        <div class="me-3">
+                            <i class="fa-solid fa-rotate-left fs-3 text-primary"></i>
+                        </div>
+
+                        <div>
+
+                            <h6>7 Days Easy Return</h6>
+
+                            <p class="text-muted small">
+                                Hassle-free return policy.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <a href="{% url 'index' %}"
+                       class="btn btn-outline-dark w-100">
+
+                        Continue Shopping
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

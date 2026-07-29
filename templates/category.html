@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Styling Adjustments for Product Page */
+    .products-section {
+        background-color: #f8fafc;
+    }
+    
+    /* Brand Pill Navigation */
+    .brand-pill {
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        background-color: #ffffff;
+        padding: 6px 16px;
+        border-radius: 50rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .brand-pill:hover, .brand-pill.active {
+        background-color: #0f172a;
+        color: #ffffff;
+        border-color: #0f172a;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Product Cards Styling */
+    .product-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        transition: all 0.25s ease-in-out;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+    
+    /* Image Container & Aspect Ratio */
+    .product-img-box {
+        position: relative;
+        background-color: #f1f5f9;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        overflow: hidden;
+    }
+    .product-img-box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-img-box img {
+        transform: scale(1.05);
+    }
+
+    /* Wishlist Floating Button */
+    .wishlist-btn-floating {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        text-decoration: none;
+    }
+    .wishlist-btn-floating:hover {
+        transform: scale(1.1);
+    }
+
+    /* Sort Select Box */
+    .custom-select {
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        padding: 6px 12px;
+    }
+    .custom-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+</style>
+
+<section class="products-section py-4 min-vh-100">
+    <div class="container">
+        
+        <!-- Top Bar: Category Header & Brand Filters -->
+        <div class="card border-0 shadow-sm rounded-3 p-3 mb-4">
+            <div class="row align-items-center g-3">
+                <div class="col-md-4">
+                    <h4 class="fw-bold text-dark mb-0">All Products</h4>
+                    <p class="text-muted small mb-0">Browse our collection of luxury watches</p>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
+                        <a href="/category/{{name}}" class="brand-pill active">All Brands</a>
+                        {% for brand in brands %}
+                            <a href="/category_brand/{{name}}/{{brand.name}}" class="brand-pill text-capitalize">
+                                {{ brand.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Sorting Bar -->
+        <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+            <div class="text-muted small">
+                Showing <span class="fw-bold text-dark">{{ products|length }}</span> products
+            </div>
+            
+            <form method="GET" class="d-flex align-items-center gap-2">
+                <label for="sort-select" class="form-label mb-0 small fw-semibold text-secondary text-nowrap">Sort By:</label>
+                <select id="sort-select" class="form-select custom-select bg-white" name="sort" onchange="this.form.submit()">
+                    <option value="" {% if not request.GET.sort %}selected{% endif %}>Featured</option>
+                    <option value="low" {% if request.GET.sort == 'low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="high" {% if request.GET.sort == 'high' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </form>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="row g-4 mb-5 pb-5">
+            {% if products|length == 0 %} 
+                <div class="col-12 py-5 text-center">
+                    <div class="card border-0 bg-white shadow-sm p-5 rounded-3">
+                        <div class="mb-3">
+                            <i class="fa-solid fa-box-open display-4 text-muted opacity-50"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">No Products Available</h4>
+                        <p class="text-muted small mb-3">We couldn't find any products matching your selection.</p>
+                        <div>
+                            <a href="{% url 'index' %}" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
+                                Return to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {% for product in products %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        
+                        <!-- Image & Wishlist Button -->
+                        <div class="product-img-box">
+
+                            <a href="{% url 'add_to_wishlist' product.id %}"
+                            class="wishlist-btn-floating"
+                            title="Add to Wishlist">
+
+                                <i class="fa-heart fs-6 {% if product.id in wishlist_ids %}fa-solid text-danger{% else %}fa-regular text-secondary{% endif %}"></i>
+
+                            </a>
+
+                            <a href="{% url 'singal_product' product.id %}" class="d-block w-100 h-100">
+                                <img src="{{ product.image1.url }}" alt="{{ product.brand }} {{ product.category }}">
+                            </a>
+
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between">
+                            <div>
+                                <!-- Brand & Category Subtitle -->
+                                <div class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                    {{ product.brand }} | {{ product.category }}'s Watch
+                                </div>
+                                
+                                <!-- Product Title -->
+                                <h6 class="fw-semibold text-dark mb-2 text-truncate" title="{{ product.description }}">
+                                    <a href="{% url 'singal_product' product.id %}" class="text-decoration-none text-dark">
+                                        {{ product.description|slice:":45" }}{% if product.description|length > 45 %}...{% endif %}
+                                    </a>
+                                </h6>
+                            </div>
+
+                            <!-- Price & Quick Action -->
+                            <div class="pt-2 mt-auto border-top d-flex align-items-center justify-content-between">
+                                <div>
+                                    <span class="fs-5 fw-bold text-dark">₹ {{ product.price }}</span>
+                                </div>
+                                <a href="{% url 'singal_product' product.id %}" class="btn btn-sm btn-outline-dark rounded-2 px-2 py-1 fw-semibold">
+                                    View Details
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+</head>
+<body>
+    <h2>Pay with Razorpay</h2>
+
+    <form>
+        <script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="{{ key }}"
+            data-amount="{{ payment.amount }}"
+            data-currency="INR"
+            data-order_id="{{ payment.id }}"
+            data-buttontext="Pay Now"
+            data-name="Test Payment"
+            data-description="Django Razorpay Test"
+            data-prefill.name="Test User"
+            data-prefill.email="test@example.com"
+            data-theme.color="#F37254">
+        </script>
+    </form>
+
+</body>
+</html>
+
+
+

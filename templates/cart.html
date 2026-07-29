@@ -1,0 +1,256 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .cart-page {
+        background-color: #f8fafc;
+    }
+    
+    /* Cart Item Card Styling */
+    .cart-item-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background-color: #ffffff;
+        transition: all 0.25s ease;
+    }
+    .cart-item-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .cart-img-wrapper {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 110px;
+    }
+    .cart-img-wrapper img {
+        max-height: 100px;
+        object-fit: contain;
+    }
+
+    /* Quantity Controls */
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f1f5f9;
+        color: #0f172a;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.2s ease;
+        border: 1px solid #cbd5e1;
+    }
+    .qty-btn:hover {
+        background-color: #0f172a;
+        color: #ffffff;
+        border-color: #0f172a;
+    }
+
+    .btn-remove-item {
+        color: #94a3b8;
+        background-color: #f1f5f9;
+        transition: all 0.2s ease;
+    }
+    .btn-remove-item:hover {
+        color: #ef4444;
+        background-color: #fee2e2;
+    }
+
+    /* Summary Card */
+    .summary-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background-color: #ffffff;
+        position: sticky;
+        top: 90px;
+    }
+
+    .btn-checkout {
+        background-color: #d97706;
+        color: #ffffff;
+        border: none;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: background-color 0.2s ease;
+    }
+    .btn-checkout:hover {
+        background-color: #b45309;
+        color: #ffffff;
+    }
+</style>
+
+<section class="cart-page py-5 min-vh-100">
+    <div class="container">
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">Shopping Cart</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1" style="color: #0f172a;">Shopping Cart</h3>
+                <p class="text-muted small mb-0">Manage items in your shopping bag</p>
+            </div>
+            <span class="badge rounded-pill bg-white text-dark border px-3 py-2 fs-6 shadow-sm">
+                {{ cart|length }} {% if cart|length == 1 %}Item{% else %}Items{% endif %}
+            </span>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- Left Side: Cart Items List -->
+            <div class="col-lg-8">
+                {% if cart %}
+                    {% for item in cart %}
+                        <div class="cart-item-card p-3 mb-3">
+                            <div class="row g-3 align-items-center">
+                                
+                                <!-- Product Image -->
+                                <div class="col-4 col-sm-3 col-md-2">
+                                    <div class="cart-img-wrapper border">
+                                        <a href="{% url 'singal_product' item.product.id %}">
+                                            <img src="{{ item.product.image1.url }}" class="img-fluid" alt="{{ item.product.name }}" />
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Product Details -->
+                                <div class="col-8 col-sm-9 col-md-10">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            {% if item.product.brand.name %}
+                                                <span class="badge bg-light text-primary border text-uppercase fw-semibold mb-1" style="font-size:0.7rem;">
+    {{ item.product.brand.name }}
+</span>
+                                            {% endif %}
+                                            <h6 class="fw-bold mb-1">
+                                                <a href="{% url 'singal_product' item.product.id %}" class="text-decoration-none" style="color: #0f172a;">          
+                                                    {{ item.product.name }}
+                                                </a>
+                                            </h6>
+                                        </div>
+
+                                        <!-- Remove Item Button -->
+                                        <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-remove-item btn-sm rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Remove from Cart">
+                                            <i class="fa-solid fa-trash-can" style="font-size: 0.85rem;"></i>
+                                        </a>
+                                    </div>
+
+                                    <!-- Price & Quantity Row -->
+                                    <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+                                        
+                                        <!-- Price -->
+                                        <div>
+                                            <span class="fs-5 fw-bold" style="color: #0f172a;">Rs. {{ item.product.price }}</span>
+                                        </div>
+
+                                        <!-- Quantity Controls -->
+                                        <div class="d-flex align-items-center bg-light border rounded-pill px-2 py-1">
+                                            <a href="{% url 'update_cart' item.product.id 'decrease' %}" class="qty-btn">
+                                                <i class="fa-solid fa-minus fs-6"></i>
+                                            </a>
+                                            <span class="px-3 fw-bold small text-dark">{{ item.quantity }}</span>
+                                            <a href="{% url 'update_cart' item.product.id 'increase' %}" class="qty-btn">
+                                                <i class="fa-solid fa-plus fs-6"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            
+                            <!-- Delivery Badge Footer -->
+                            <div class="border-top pt-2 mt-3 d-flex align-items-center gap-2 text-muted small">
+                                <img src="{% static '/images/icon/returnCart.svg' %}" alt="" style="width: 16px; height: 16px;">
+                                <span>Free Insured Delivery within 5–7 Days</span>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Empty Cart View -->
+                    <div class="card border-0 bg-white shadow-sm p-5 text-center rounded-4">
+                        <div class="mb-3">
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <i class="fa-solid fa-bag-shopping display-6 text-muted"></i>
+                            </div>
+                        </div>
+                        <h5 class="fw-bold text-dark">Your Cart is Empty</h5>
+                        <p class="text-muted small">Looks like you haven't added any luxury timepieces to your cart yet.</p>
+                        <div>
+                            <a href="{% url 'index' %}" class="btn btn-primary px-4 py-2 mt-2 fw-semibold rounded-pill">
+                                Explore Collection
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Right Side: Order Summary Panel -->
+            {% if cart %}
+            <div class="col-lg-4">
+                <div class="summary-card shadow-sm p-4">
+                    <h5 class="fw-bold mb-3" style="color: #0f172a;">Order Summary</h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Subtotal</span>
+                        <span class="fw-semibold text-dark">Rs. {{ total_amount }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Estimated Shipping</span>
+                        <span class="text-success fw-semibold small">FREE</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Taxes</span>
+                        <span class="text-muted small">Included</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold fs-6 text-dark">Grand Total</span>
+                        <span class="fw-bold fs-5 text-dark">Rs. {{ total_amount }}</span>
+                    </div>
+
+                    <a href="{% url 'checkout' %}" class="btn btn-checkout w-100 py-3 rounded-3 text-uppercase d-inline-flex align-items-center justify-content-center gap-2">
+                        Proceed to Checkout
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                    <!-- Security Perks -->
+                    <div class="mt-4 border-top pt-3">
+                        <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+                            <i class="fa-solid fa-shield-halved text-success"></i>
+                            <span>100% Secure Checkout Guaranteed</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-muted small">
+                            <i class="fa-solid fa-truck-fast text-primary"></i>
+                            <span>Insured Doorstep Delivery</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}

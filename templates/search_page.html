@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .search-results-section {
+        background-color: #f8fafc;
+    }
+
+    /* Product Card Styling (Category & Home Page Match) */
+    .product-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #ffffff;
+        transition: all 0.25s ease-in-out;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+
+    /* 1:1 Aspect Ratio Image Box */
+    .product-img-box {
+        position: relative;
+        background-color: #f1f5f9;
+        padding-top: 100%;
+        overflow: hidden;
+    }
+    .product-img-box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-img-box img {
+        transform: scale(1.06);
+    }
+
+    /* Floating Wishlist Button */
+    .wishlist-btn-floating {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        text-decoration: none;
+    }
+    .wishlist-btn-floating:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<section class="search-results-section py-4 min-vh-100">
+    <div class="container">
+        
+        <!-- Breadcrumb Bar -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">Search Results</li>
+            </ol>
+        </nav>
+
+        <!-- Search Results Header -->
+        <div class="card border-0 shadow-sm rounded-3 p-3 mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h4 class="fw-bold text-dark mb-1">
+                        Search Results
+                        {% if query %}
+                            for <span class="text-primary">"{{ query }}"</span>
+                        {% endif %}
+                    </h4>
+                    <p class="text-muted small mb-0">Found <span class="fw-bold text-dark">{{ results|length }}</span> matching timepieces</p>
+                </div>
+                <div>
+                    <a href="{% url 'index' %}" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-semibold">
+                        Clear Search
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="row g-4 mb-5">
+            {% if results %}
+                {% for r in results %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        
+                        <!-- Product Image & Wishlist Button -->
+                        <div class="product-img-box">
+
+                            <a href="{% url 'add_to_wishlist' r.id %}"
+                            class="wishlist-btn-floating"
+                            title="Add to Wishlist">
+
+                                <i class="fa-heart fs-6 {% if r.id in wishlist_ids %}fa-solid text-danger{% else %}fa-regular text-secondary{% endif %}"></i>
+
+                            </a>
+
+                            <a href="{% url 'singal_product' r.id %}" class="d-block w-100 h-100">
+                                <img src="{{ r.image1.url }}" alt="{{ r.brand }} {{ r.category }}">
+                            </a>
+
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between">
+                            <div>
+                                <div class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                    {{ r.brand }} | {{ r.category }}'s Watch
+                                </div>
+                                <h6 class="fw-semibold text-dark mb-2 text-truncate" title="{{ r.description }}">
+                                    <a href="{% url 'singal_product' r.id %}" class="text-decoration-none text-dark">
+                                        {{ r.description|slice:":45" }}{% if r.description|length > 45 %}...{% endif %}
+                                    </a>
+                                </h6>
+                            </div>
+
+                            <div class="pt-2 mt-auto border-top d-flex align-items-center justify-content-between">
+                                <span class="fs-5 fw-bold text-dark">₹ {{ r.price }}</span>
+                                <a href="{% url 'singal_product' r.id %}" class="btn btn-sm btn-outline-dark rounded-2 px-2 py-1 fw-semibold">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Empty Search State -->
+                <div class="col-12 py-5">
+                    <div class="card border-0 bg-white shadow-sm p-5 text-center rounded-4">
+                        <div class="mb-3">
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <i class="fa-solid fa-magnifying-glass display-6 text-muted"></i>
+                            </div>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">No Products Available</h4>
+                        <p class="text-muted small mb-4">We couldn't find any watches matching your search query. Try checking for typos or searching for another brand.</p>
+                        <div>
+                            <a href="{% url 'index' %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-pill">
+                                Back to Catalog
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

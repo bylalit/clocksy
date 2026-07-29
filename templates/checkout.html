@@ -1,0 +1,199 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .checkout-page {
+        background-color: #f8fafc;
+    }
+
+    .checkout-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background-color: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-control-custom {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+    .form-control-custom:focus {
+        background-color: #ffffff;
+        border-color: #d97706;
+        box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
+    }
+
+    /* Summary Card Sticky */
+    .summary-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background-color: #ffffff;
+        position: sticky;
+        top: 90px;
+    }
+
+    .btn-place-order {
+        background-color: #d97706;
+        color: #ffffff;
+        border: none;
+        font-weight: 700;
+        padding: 0.85rem;
+        border-radius: 8px;
+        letter-spacing: 0.5px;
+        transition: background-color 0.2s ease;
+    }
+    .btn-place-order:hover {
+        background-color: #b45309;
+        color: #ffffff;
+    }
+
+    .item-img-thumb {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 4px;
+        border: 1px solid #e2e8f0;
+    }
+</style>
+
+<section class="checkout-page py-5 min-vh-100">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'cart_view' %}" class="text-decoration-none text-muted">Cart</a></li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">Checkout</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="mb-4">
+            <h3 class="fw-bold mb-1" style="color: #0f172a;">Checkout & Shipping</h3>
+            <p class="text-muted small mb-0">Please enter your shipping address to complete your luxury order</p>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- Left Side: Shipping Address Form -->
+            <div class="col-lg-7">
+                <div class="checkout-card p-4 p-sm-5">
+                    
+                    <h5 class="fw-bold mb-4" style="color: #0f172a;">
+                        <i class="fa-solid fa-truck-fast text-warning me-2"></i> Shipping Address
+                    </h5>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Full Name</label>
+                            <input type="text" class="form-control form-control-custom" name="name" value="{{ request.user.get_full_name }}" placeholder="Enter your full name" required>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Email Address</label>
+                            <input type="email" class="form-control form-control-custom" name="email" value="{{ request.user.email }}" placeholder="name@example.com" required>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Phone Number</label>
+                            <input type="tel" class="form-control form-control-custom" name="phone" placeholder="+91 98765 43210" required>
+                        </div>
+
+                        <!-- Delivery Address -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-dark">Complete Delivery Address</label>
+                            <textarea class="form-control form-control-custom" rows="4" name="address" placeholder="House/Flat No., Building Name, Street, City, Pincode" required></textarea>
+                        </div>
+
+                        <!-- Submit Place Order Button -->
+                        <button type="submit" class="btn btn-place-order w-100 text-uppercase d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-lock"></i> Place Order (Rs. {{ total_amount }})
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Right Side: Order Summary Panel -->
+            <div class="col-lg-5">
+                <div class="summary-card shadow-sm p-4">
+                    
+                    <h5 class="fw-bold mb-3" style="color: #0f172a;">Your Order Details</h5>
+
+                    <!-- Cart Items Preview -->
+                    <div class="cart-items-wrapper mb-3" style="max-height: 280px; overflow-y: auto;">
+                        {% for item in cart %}
+                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if item.product.image1 %}
+                                        <img src="{{ item.product.image1.url }}" class="item-img-thumb" alt="{{ item.product.name }}">
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-0 small text-truncate" style="max-width: 180px;">
+                                            {{ item.product.name }}
+                                        </h6>
+                                        <span class="text-muted small">Qty: {{ item.quantity }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="fw-bold small" style="color: #0f172a;">Rs. {{ item.total_price }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Price Calculations -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Subtotal</span>
+                        <span class="fw-semibold text-dark">Rs. {{ total_amount }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Shipping Fee</span>
+                        <span class="text-success fw-semibold small">FREE</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Taxes</span>
+                        <span class="text-muted small">Included</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold fs-6 text-dark">Total Payable</span>
+                        <span class="fw-bold fs-4" style="color: #0f172a;">Rs. {{ total_amount }}</span>
+                    </div>
+
+                    <!-- Security & Trust Badges -->
+                    <div class="border-top pt-3">
+                        <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+                            <i class="fa-solid fa-shield-halved text-success"></i>
+                            <span>256-bit Encrypted Secure Transaction</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-muted small">
+                            <i class="fa-solid fa-rotate-left text-primary"></i>
+                            <span>Easy 7-Day Return Policy</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

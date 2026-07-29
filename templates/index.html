@@ -1,0 +1,833 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --dark-accent: #0f172a;
+        --gold-accent: #d97706;
+    }
+
+    /* Section Titles */
+    .section-title-wrapper {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    .section-title {
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: var(--dark-accent);
+        text-transform: uppercase;
+        font-size: 1.75rem;
+        position: relative;
+        display: inline-block;
+    }
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: var(--gold-accent);
+        margin: 8px auto 0;
+        border-radius: 2px;
+    }
+
+    /* Main Hero Slider Styling */
+    .hero-slider .carousel-item img {
+        border-radius: 16px;
+        object-fit: cover;
+    }
+    .hero-slider .carousel-control-prev-icon,
+    .hero-slider .carousel-control-next-icon {
+        background-color: rgba(15, 23, 42, 0.8);
+        border-radius: 50%;
+        padding: 1.25rem;
+        background-size: 50%;
+    }
+
+    /* Category Cards */
+    .category-card {
+        text-decoration: none;
+        color: var(--dark-accent);
+        display: block;
+        transition: transform 0.3s ease;
+    }
+    .category-card:hover {
+        transform: translateY(-6px);
+        color: var(--gold-accent);
+    }
+    .category-img-wrapper {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .category-card:hover .category-img-wrapper {
+        border-color: var(--gold-accent);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .category-img-wrapper img {
+        border-radius: 12px;
+        transition: transform 0.3s ease;
+    }
+    .category-card:hover .category-img-wrapper img {
+        transform: scale(1.04);
+    }
+
+    /* Product Cards */
+    .product-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #ffffff;
+        transition: all 0.25s ease-in-out;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+    .product-img-box {
+        position: relative;
+        background-color: #f1f5f9;
+        padding-top: 100%;
+        overflow: hidden;
+    }
+    .product-img-box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-img-box img {
+        transform: scale(1.06);
+    }
+
+    /* Floating Wishlist Button */
+    .wishlist-btn-floating {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        text-decoration: none;
+    }
+    .wishlist-btn-floating:hover {
+        transform: scale(1.1);
+    }
+
+    /* Multi Carousel Styling */
+    .multi-carousel img {
+        border-radius: 12px;
+        transition: transform 0.3s ease;
+    }
+    .multi-carousel img:hover {
+        transform: scale(1.03);
+    }
+
+    /* Brand Box */
+    .brand-box {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+        display: block;
+        overflow: hidden;
+    }
+    .brand-box:hover {
+        border-color: var(--gold-accent);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    }
+    .brand-box img {
+        border-radius: 8px;
+    }
+
+    /* Collection Grid */
+    .collection-item {
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    .collection-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        border-color: var(--gold-accent);
+    }
+
+    /* Features Highlight Box */
+    .features-card {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 2.5rem 1rem;
+    }
+
+    /* Login Banner CTA */
+    .login-cta-box {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 20px;
+        color: #ffffff;
+        padding: 3.5rem 1.5rem;
+        border: 1px solid rgba(217, 119, 6, 0.3);
+    }
+    .btn-gold {
+        background-color: var(--gold-accent);
+        color: #ffffff;
+        font-weight: 700;
+        padding: 0.85rem 2.25rem;
+        border-radius: 50rem;
+        transition: all 0.25s ease;
+    }
+    .btn-gold:hover {
+        background-color: #b45309;
+        color: #ffffff;
+        box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3);
+    }
+</style>
+
+<!-- 1. Hero Main Banner Carousel Slider -->
+<section class="py-4">
+    <div class="container">
+        <div class="carousel slide hero-slider shadow-sm" id="mainHeroSlider" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Wall clock' %}">
+                        <img src="{% static '/images/slider/Clocks_upto30_D.webp' %}" class="d-block w-100" alt="Wall Clocks Banner">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Men' %}">
+                        <img src="{% static '/images/slider/IB_JanSale_FY25_D.webp' %}" class="d-block w-100" alt="Men's Sale">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Smart Watches' %}">
+                        <img src="{% static '/images/slider/Smart_home_feb_d.webp' %}" class="d-block w-100" alt="Smart Watches">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Men' %}">
+                        <img src="{% static '/images/slider/SmartVday_Feb_D.webp' %}" class="d-block w-100" alt="Valentine Special">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Women' %}">
+                        <img src="{% static '/images/slider/Raga30_JanSale_FY25_D.jpg' %}" class="d-block w-100" alt="Women Raga Collection">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'couple watch' %}">
+                        <img src="{% static '/images/slider/VDaySale2060_D_310124.webp' %}" class="d-block w-100" alt="Couple Watches">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'couple watch' %}">
+                        <img src="{% static '/images/slider/WW50_D.webp' %}" class="d-block w-100" alt="World Collection">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="{% url 'category' 'Men' %}">
+                        <img src="{% static '/images/slider/NebulaMen_D.webp' %}" class="d-block w-100" alt="Nebula Men">
+                    </a>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainHeroSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainHeroSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Dual Trending Posters -->
+<section class="py-3">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12 col-md-6">
+                <a href="{% url 'category' 'Men' %}" class="d-block overflow-hidden rounded-4 shadow-sm">
+                    <img src="{% static '/images/poster/TrendingFinal_Men_D.webp' %}" alt="Men's Trending" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-12 col-md-6">
+                <a href="{% url 'category' 'Women' %}" class="d-block overflow-hidden rounded-4 shadow-sm">
+                    <img src="{% static '/images/poster/TrendingFinal_Women_D.webp' %}" alt="Women's Trending" class="img-fluid w-100">
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Secondary Payment & Bank Offers Slider -->
+<section class="py-4">
+    <div class="container">
+        <div id="paymentOffersSlider" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="3000">
+                    <a href="#">
+                        <img src="{% static '/images/slider/BFLBanner_D.webp' %}" class="d-block w-100" alt="Offer Banner 1">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="#">
+                        <img src="{% static '/images/slider/Simpl_d_1312.jpg' %}" class="d-block w-100" alt="Offer Banner 2">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="#">
+                        <img src="{% static '/images/slider/Snapmint_d_0125.webp' %}" class="d-block w-100" alt="Offer Banner 3">
+                    </a>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <a href="#">
+                        <img src="{% static '/images/slider/SBI_Banner_D-v1.jpg' %}" class="d-block w-100" alt="Offer Banner 4">
+                    </a>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#paymentOffersSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#paymentOffersSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Category Grid (The Best Way to Buy) -->
+<section class="py-5">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">The Best Way To Buy The Products You Love</h2>
+            <p class="text-muted small mt-1">Select from our curated collections</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Men' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/men_.webp' %}" class="img-fluid w-100" alt="Men's Collection">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Men</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Women' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/women.webp' %}" class="img-fluid w-100" alt="Women's Collection">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Women</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Smart Watches' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/couple.webp' %}" class="img-fluid w-100" alt="Smart Watches">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Smart Watches</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Kids' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/kids.webp' %}" class="img-fluid w-100" alt="Kids Watches">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Kids</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Premium Watches' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/New_Arrivals_thumb.jpg' %}" class="img-fluid w-100" alt="Premium Watches">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Premium Watches</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Gifting' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/ragaB.webp' %}" class="img-fluid w-100" alt="Gifting Collection">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Gifting</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'couple watch' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/luxe.webp' %}" class="img-fluid w-100" alt="Couple Watches">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Couple Watch</h6>
+                </a>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{% url 'category' 'Wall clock' %}" class="category-card text-center">
+                    <div class="category-img-wrapper mb-2">
+                        <img src="{% static '/images/products/clock.webp' %}" class="img-fluid w-100" alt="Wall Clocks">
+                    </div>
+                    <h6 class="fw-bold mb-0 text-uppercase">Wall Clock</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <div class="section-title-wrapper text-center mb-4">
+            <h2 class="section-title fw-bold text-uppercase">New Arrivals</h2>
+            <p class="text-muted small">Discover our latest additions & limited editions</p>
+        </div>
+
+        <div id="newArrivalsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner">
+                
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/NA_Wedding_D.jpg' %}" class="d-block w-100 img-fluid zoom-img" alt="Wedding Collection">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/Stellar_D.jpg' %}" class="d-block w-100 img-fluid zoom-img" alt="Stellar Series">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/Memoir_D.webp' %}" class="d-block w-100 img-fluid zoom-img" alt="Memoir Collection">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/RagaSilver_D.webp' %}" class="d-block w-100 img-fluid zoom-img" alt="Raga Silver">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/NA_Zoop_D.webp' %}" class="d-block w-100 img-fluid zoom-img" alt="Zoop Kids">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/NewArrivals_Smart_CrownCollection_D.jpg' %}" class="d-block w-100 img-fluid zoom-img" alt="Crown Collection">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/NA_Showstopper_D-v1.jpg' %}" class="d-block w-100 img-fluid zoom-img" alt="Showstopper">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/Memoir_D.webp' %}" class="d-block w-100 img-fluid zoom-img" alt="Memoir Series">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="position-relative overflow-hidden rounded-4 shadow-sm h-100">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3 z-2">NEW</span>
+                                <img src="{% static '/images/new-arrivel/NA_ceramic_D-v1.webp' %}" class="d-block w-100 img-fluid zoom-img" alt="Ceramic Collection">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#newArrivalsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#newArrivalsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Shop By Brands Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">Shop By Brands</h2>
+            <p class="text-muted small mt-1">Explore authentic luxury watch brands</p>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/TitanSBDesktop.webp' %}" alt="Titan" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Anne-K_desktop.webp' %}" alt="Raga" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Brand_Edge_D.webp' %}" alt="Fastrack" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Brand_Nebula_D.webp' %}" alt="Police" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Coach_desktop.webp' %}" alt="Sonata" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/fastrackdesktop.webp' %}" alt="Anne Klein" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/KC_D.jpg' %}" alt="Rolex" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Police_desktop.webp' %}" alt="Police" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/sonatadesktop.webp' %}" alt="Sonata" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/tommydesktop.webp' %}" alt="Tommy" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Xylys-Mobile-v1.webp' %}" alt="Xylys" class="img-fluid w-100 brand-box">
+            </div>
+            <div class="col-6 col-sm-4 col-md-3">
+                    <img src="{% static '/images/Zoop-Mobile-v1.webp' %}" alt="Zoop" class="img-fluid w-100 brand-box">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Movement in Time Grid Section -->
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">Movement In Time</h2>
+            <p class="text-muted small mt-1">Find watches crafted by mechanisms you admire</p>
+        </div>
+
+        <div class="row g-4 align-items-center">
+            <div class="col-12 col-md-6">
+                <a href="{% url 'category' 'Men' %}" class="d-block rounded-4 overflow-hidden shadow-sm">
+                    <img src="{% static '/images/MechanicalE.webp' %}" alt="Mechanical Movement" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <a href="{% url 'category' 'Men' %}" class="d-block rounded-3 overflow-hidden shadow-sm">
+                            <img src="{% static '/images/Automatic.webp' %}" alt="Automatic" class="img-fluid w-100">
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'category' 'Men' %}" class="d-block rounded-3 overflow-hidden shadow-sm">
+                            <img src="{% static '/images/Quartz.jpg' %}" alt="Quartz" class="img-fluid w-100">
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'category' 'Men' %}" class="d-block rounded-3 overflow-hidden shadow-sm">
+                            <img src="{% static '/images/Chronograph.webp' %}" alt="Chronograph" class="img-fluid w-100">
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'category' 'Smart Watches' %}" class="d-block rounded-3 overflow-hidden shadow-sm">
+                            <img src="{% static '/images/Smart.webp' %}" alt="Smart Watch" class="img-fluid w-100">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 8. Latest Products Showcase Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">Latest Products</h2>
+            <p class="text-muted small mt-1">Handpicked best-selling watches ready for immediate order</p>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="product-card">
+
+                    <div class="product-img-box">
+
+                            <a href="{% url 'add_to_wishlist' product.id %}"
+                            class="wishlist-btn-floating"
+                            title="Add to Wishlist">
+
+                                <i class="fa-heart fs-6 {% if product.id in wishlist_ids %}fa-solid text-danger{% else %}fa-regular text-secondary{% endif %}"></i>
+
+                            </a>
+
+                            <a href="{% url 'singal_product' product.id %}" class="d-block w-100 h-100">
+                                <img src="{{ product.image1.url }}" alt="{{ product.brand }} {{ product.category }}">
+                            </a>
+
+                        </div>
+
+                    <div class="p-3 d-flex flex-column flex-grow-1 justify-content-between">
+                        <div>
+                            <div class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                {{ product.brand }} | {{ product.category }}'s Watch
+                            </div>
+                            <h6 class="fw-semibold text-dark mb-2 text-truncate" title="{{ product.description }}">
+                                <a href="{% url 'singal_product' product.id %}" class="text-decoration-none text-dark">
+                                    {{ product.description|slice:":45" }}{% if product.description|length > 45 %}...{% endif %}
+                                </a>
+                            </h6>
+                        </div>
+
+                        <div class="pt-2 mt-auto border-top d-flex align-items-center justify-content-between">
+                            <span class="fs-5 fw-bold text-dark">₹ {{ product.price }}</span>
+                            <a href="{% url 'singal_product' product.id %}" class="btn btn-sm btn-outline-dark rounded-2 px-2 py-1 fw-semibold">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 9. Discover Your Style Multi-Image Carousel -->
+<section class="py-5 bg-white border-top border-bottom multi-carousel">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">Discover Your Style</h2>
+            <p class="text-muted small mt-1">Aesthetic styles to match every occasion</p>
+        </div>
+
+        <div id="discoverStyleCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="3500">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Bold_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 1">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Couple_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 2">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Luxe_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 3">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="3500">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Minimal_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 4">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Sporty_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 5">
+                        </div>
+                        <div class="col-4">
+                            <img src="{% static '/images/poster/Discover_Couple_D.webp' %}" class="d-block w-100 img-fluid shadow-sm" alt="Discover Style 6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#discoverStyleCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#discoverStyleCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Collections Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">Collection Showcase</h2>
+            <p class="text-muted small mt-1">Explore our signature series and limited releases</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <a href="{% url 'category' 'Men' %}" class="collection-item">
+                    <img src="{% static '/images/collection/WorkwearWD.jpg' %}" alt="Workwear" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="#" class="collection-item">
+                    <img src="{% static '/images/collection/WorkwearNTD.webp' %}" alt="Workwear NT" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{% url 'category' 'Women' %}" class="collection-item">
+                    <img src="{% static '/images/collection/RagaWD.webp' %}" alt="Raga Collection" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="#" class="collection-item">
+                    <img src="{% static '/images/collection/RagaNTD.webp' %}" alt="Raga NT" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="#" class="collection-item">
+                    <img src="{% static '/images/collection/GrandmasterNATD.jpg' %}" alt="Grandmaster" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{% url 'category' 'Men' %}" class="collection-item">
+                    <img src="{% static '/images/collection/GrandWD.webp' %}" alt="Grand Collection" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="#" class="collection-item">
+                    <img src="{% static '/images/collection/MaritimeTD.webp' %}" alt="Maritime Collection" class="img-fluid w-100">
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{% url 'category' 'Men' %}" class="collection-item">
+                    <img src="{% static '/images/collection/MaritimeWD.webp' %}" alt="Maritime Series" class="img-fluid w-100">
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 11. Extra Content: Luxury Watch Journal & Care Guide (NEW SECTION) -->
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <div class="section-title-wrapper">
+            <h2 class="section-title">The Clocksy Journal</h2>
+            <p class="text-muted small mt-1">Expert guides on watch care & luxury styling</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                    <div class="card-body p-4">
+                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-uppercase fw-semibold mb-2">Watch Care</span>
+                        <h5 class="fw-bold text-dark mt-1">Automatic vs. Quartz Mechanisms</h5>
+                        <p class="text-muted small mb-3">Understanding the mechanical art behind your luxury timepiece and how movement impacts accuracy.</p>
+                        <span class="small fw-semibold text-primary">Read Guide <i class="fa-solid fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                    <div class="card-body p-4">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle text-uppercase fw-semibold mb-2">Styling Tips</span>
+                        <h5 class="fw-bold text-dark mt-1">Choosing the Perfect Formal Watch</h5>
+                        <p class="text-muted small mb-3">Matching leather straps, dial diameters, and metallic finishes with business attire seamlessly.</p>
+                        <span class="small fw-semibold text-primary">Read Guide <i class="fa-solid fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                    <div class="card-body p-4">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle text-uppercase fw-semibold mb-2">Maintenance</span>
+                        <h5 class="fw-bold text-dark mt-1">Water Resistance Guide</h5>
+                        <p class="text-muted small mb-3">Everything you need to know about ATM ratings, leather protection, and maintaining water gaskets.</p>
+                        <span class="small fw-semibold text-primary">Read Guide <i class="fa-solid fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 12. Trust Features Highlight Box -->
+<section class="py-5">
+    <div class="container">
+        <div class="features-card shadow-sm">
+            <div class="row g-4 text-center">
+                <div class="col-12 col-md-4">
+                    <img src="{% static '/images/icon/Gurantee.svg' %}" alt="100% Original" class="mb-3" style="width: 48px; height: 48px;">
+                    <h5 class="fw-bold mb-1">100% ORIGINAL</h5>
+                    <p class="text-muted small mb-0">All products are directly sourced from official brand distributors.</p>
+                </div>
+                <div class="col-12 col-md-4 border-start border-end">
+                    <img src="{% static '/images/icon/return.svg' %}" alt="30 Days Return" class="mb-3" style="width: 48px; height: 48px;">
+                    <h5 class="fw-bold mb-1">30 DAYS RETURN</h5>
+                    <p class="text-muted small mb-0">Hassle-free return policy with easy pickup at your doorstep.</p>
+                </div>
+                <div class="col-12 col-md-4">
+                    <img src="{% static '/images/icon/Shipping.svg' %}" alt="Free Shipping" class="mb-3" style="width: 48px; height: 48px;">
+                    <h5 class="fw-bold mb-1">FREE SHIPPING</h5>
+                    <p class="text-muted small mb-0">Enjoy free nationwide insured delivery on all orders.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 13. Login CTA Box (Shows when user is not authenticated) -->
+{% if not user.is_authenticated %}
+<section class="pb-5">
+    <div class="container">
+        <div class="login-cta-box text-center shadow">
+            <h3 class="fw-bold mb-2">LOGIN FOR THE BEST EXPERIENCE</h3>
+            <p class="text-slate-300 small mb-4">Track your orders, save items to your wishlist, and get exclusive luxury offers.</p>
+            
+            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                <a href="{% url 'login' %}" class="btn btn-gold text-decoration-none">
+                    LOGIN NOW
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
+                    Create An Account
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
