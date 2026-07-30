@@ -3,6 +3,8 @@ from .models import Category, Product, Brand, Wishlist, Cart, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Sum
 from django.contrib import messages
 import stripe
 from django.conf import settings
@@ -385,12 +387,309 @@ def payment_success(request):
 
     if "checkout_data" in request.session:
         del request.session["checkout_data"]
+        
+    categories = Category.objects.all()
+    brand = Brand.objects.all()
 
     return render(request, "payment_success.html", {
-        "order": order
+        "order": order,
+        "categories": categories,
+        "brand": brand
     })
 
 @login_required(login_url="/login")
 def payment_cancel(request):
 
     return render(request, "payment_cancel.html")
+
+
+
+
+
+
+
+
+# Admin View
+
+def admin_login(request):
+    # Agar admin pehle se logged in hai, to direct dashboard par bhej do
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect('admin_dashboard')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.is_staff:  # Check ki user Staff / Admin hai ya nahi
+                login(request, user)
+                messages.success(request, f'Welcome back, {user.first_name or user.username}!')
+                return redirect('admin_dashboard')
+            else:
+                messages.error(request, 'Access Denied: You do not have admin permissions.')
+        else:
+            messages.error(request, 'Invalid admin username or password.')
+
+    return render(request, 'admin_panel/admin_login.html')
+
+
+def logout_admin(request):
+    logout(request)
+    return redirect(admin_login)
+
+@staff_member_required(login_url='/custom-admin/login/')
+def admin_dashboard(request):
+    total_orders = Order.objects.count()
+
+    total_products = Product.objects.count()
+
+    revenue_data = Order.objects.exclude(status='Cancelled').aggregate(Sum('total_amount'))
+    total_revenue = revenue_data['total_amount__sum'] or 0
+
+    total_customers = User.objects.filter(is_staff=False).count()
+    recent_orders = Order.objects.all().order_by('-id')[:10]
+
+    context = {
+        'total_orders': total_orders,
+        'total_products': total_products,
+        'total_revenue': total_revenue,
+        'total_customers': total_customers,
+        'recent_orders': recent_orders,
+    }
+    return render(request, 'admin_panel/dashboard.html', context)
+
+
+# ================= CATEGORY CRUD =================
+
+@staff_member_required(login_url='/custom-admin/login/')
+def category_list(request):
+    categories = Category.objects.all().order_by('-id')
+    return render(request, 'admin_panel/category_list.html', {'categories': categories})
+
+@staff_member_required(login_url='login')
+def add_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+
+        if Category.objects.filter(name=name).exists():
+            messages.error(request, 'Category with this name already exists!')
+        else:
+            Category.objects.create(name=name, image=image)
+            messages.success(request, 'Category added successfully!')
+            return redirect('category_list')
+
+    return render(request, 'admin_panel/category_form.html', {'title': 'Add Category'})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def update_category(request, id):
+    category = get_object_or_404(Category, id=id)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+
+        category.name = name
+        if image:
+            category.image = image
+        category.save()
+        messages.success(request, 'Category updated successfully!')
+        return redirect('category_list')
+
+    return render(request, 'admin_panel/category_form.html', {'category': category, 'title': 'Edit Category'})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def delete_category(request, id):
+    category = get_object_or_404(Category, id=id)
+    category.delete()
+    messages.success(request, 'Category deleted successfully!')
+    return redirect('category_list')
+
+
+# ================= BRAND CRUD =================
+
+@staff_member_required(login_url='/custom-admin/login/')
+def brand_list(request):
+    brands = Brand.objects.all().order_by('-id')
+    return render(request, 'admin_panel/brand_list.html', {'brands': brands})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def add_brand(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+
+        if Brand.objects.filter(name=name).exists():
+            messages.error(request, 'Brand with this name already exists!')
+        else:
+            Brand.objects.create(name=name, image=image)
+            messages.success(request, 'Brand added successfully!')
+            return redirect('brand_list')
+
+    return render(request, 'admin_panel/brand_form.html', {'title': 'Add Brand'})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def update_brand(request, id):
+    brand = get_object_or_404(Brand, id=id)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+
+        brand.name = name
+        if image:
+            brand.image = image
+        brand.save()
+        messages.success(request, 'Brand updated successfully!')
+        return redirect('brand_list')
+
+    return render(request, 'admin_panel/brand_form.html', {'brand': brand, 'title': 'Edit Brand'})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def delete_brand(request, id):
+    brand = get_object_or_404(Brand, id=id)
+    brand.delete()
+    messages.success(request, 'Brand deleted successfully!')
+    return redirect('brand_list')
+
+
+# ================= PRODUCT CRUD =================
+
+@staff_member_required(login_url='/custom-admin/login/')
+def admin_product_list(request):
+    products = Product.objects.all().order_by('-id')
+    return render(request, 'admin_panel/product_list.html', {'products': products})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def admin_product_detail(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, 'admin_panel/product_detail.html', {'product': product})
+
+@staff_member_required(login_url='/custom-admin/login/')
+def add_product(request):
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        category_id = request.POST.get('category')
+        brand_id = request.POST.get('brand')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        
+        image1 = request.FILES.get('image1')
+        image2 = request.FILES.get('image2')
+        image3 = request.FILES.get('image3')
+
+        category = Category.objects.get(id=category_id) if category_id else None
+        brand = Brand.objects.get(id=brand_id) if brand_id else None
+
+        Product.objects.create(
+            name=name,
+            category=category,
+            brand=brand,
+            price=price,
+            description=description,
+            image1=image1,
+            image2=image2,
+            image3=image3
+        )
+        messages.success(request, 'Product created successfully!')
+        return redirect('admin_product_list')
+
+    context = {
+        'title': 'Add New Product',
+        'categories': categories,
+        'brands': brands
+    }
+    return render(request, 'admin_panel/product_form.html', context)
+
+
+@staff_member_required(login_url='/custom-admin/login/')
+def update_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
+
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        
+        category_id = request.POST.get('category')
+        brand_id = request.POST.get('brand')
+        
+        if category_id:
+            product.category = Category.objects.get(id=category_id)
+        if brand_id:
+            product.brand = Brand.objects.get(id=brand_id)
+
+        product.price = request.POST.get('price')
+        product.description = request.POST.get('description')
+
+        if request.FILES.get('image1'):
+            product.image1 = request.FILES.get('image1')
+        if request.FILES.get('image2'):
+            product.image2 = request.FILES.get('image2')
+        if request.FILES.get('image3'):
+            product.image3 = request.FILES.get('image3')
+
+        product.save()
+        messages.success(request, 'Product updated successfully!')
+        return redirect('admin_product_list')
+
+    context = {
+        'title': 'Edit Product',
+        'product': product,
+        'categories': categories,
+        'brands': brands
+    }
+    return render(request, 'admin_panel/product_form.html', context)
+
+
+@staff_member_required(login_url='/custom-admin/login/')
+def delete_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    product.delete()
+    messages.success(request, 'Product deleted successfully!')
+    return redirect('admin_product_list')
+
+
+# ================= ORDER MANAGEMENT =================
+
+@staff_member_required(login_url='/custom-admin/login/')
+def admin_order_list(request):
+    status_filter = request.GET.get('status')
+    
+    if status_filter:
+        orders = Order.objects.filter(status=status_filter).order_by('-id')
+    else:
+        orders = Order.objects.all().order_by('-id')
+
+    context = {
+        'orders': orders,
+        'current_status': status_filter
+    }
+    return render(request, 'admin_panel/order_list.html', context)
+
+
+@staff_member_required(login_url='/custom-admin/login/')
+def admin_order_detail(request, id):
+    order = get_object_or_404(Order, id=id)
+    
+    # If OrderItem model exists, fetch items related to this order
+    order_items = OrderItem.objects.filter(order=order) if 'OrderItem' in globals() else []
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status:
+            order.status = new_status
+            order.save()
+            messages.success(request, f'Order #{order.id} status updated to {new_status}!')
+            return redirect('admin_order_detail', id=order.id)
+
+    context = {
+        'order': order,
+        'order_items': order_items
+    }
+    return render(request, 'admin_panel/order_detail.html', context)

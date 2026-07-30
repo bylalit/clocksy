@@ -1,0 +1,94 @@
+{% extends 'admin_panel/admin_layout.html' %}
+
+{% block admin_content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="fw-bold mb-1" style="color: #0f172a;">Product Details</h4>
+        <p class="text-muted small mb-0">Overview and complete information of Product #{{ product.id }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'update_product' product.id %}" class="btn btn-warning fw-bold px-3">
+            <i class="fa-solid fa-pen-to-square me-1"></i> Edit Product
+        </a>
+        <a href="{% url 'admin_product_list' %}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Left Column: Product Gallery -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-3 bg-white text-center">
+            <h6 class="fw-semibold text-muted small mb-2 text-start">Primary Image</h6>
+            {% if product.image1 %}
+                <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="img-fluid rounded-3 object-fit-contain" style="max-height: 320px; width: 100%;">
+            {% else %}
+                <div class="bg-light rounded p-5 text-muted">No Image Available</div>
+            {% endif %}
+        </div>
+
+        <!-- Additional Images Preview -->
+        <div class="row g-2">
+            <div class="col-6">
+                <div class="card border-0 shadow-sm rounded-3 p-2 bg-white text-center">
+                    <span class="small text-muted mb-1 d-block">Image 2</span>
+                    {% if product.image2 %}
+                        <img src="{{ product.image2.url }}" class="img-fluid rounded object-fit-contain" style="height: 100px;" alt="">
+                    {% else %}
+                        <span class="small text-muted py-4 d-block">None</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card border-0 shadow-sm rounded-3 p-2 bg-white text-center">
+                    <span class="small text-muted mb-1 d-block">Image 3</span>
+                    {% if product.image3 %}
+                        <img src="{{ product.image3.url }}" class="img-fluid rounded object-fit-contain" style="height: 100px;" alt="">
+                    {% else %}
+                        <span class="small text-muted py-4 d-block">None</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Product Metadata -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-sm-5 bg-white h-100">
+            
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold">
+                    {{ product.brand|default:"No Brand" }}
+                </span>
+                <span class="badge bg-secondary-subtle text-secondary border fw-semibold">
+                    {{ product.category|default:"No Category" }}
+                </span>
+            </div>
+
+            <h3 class="fw-bold mb-3" style="color: #0f172a;">{{ product.name }}</h3>
+
+            <div class="p-3 bg-light rounded-3 mb-4">
+                <span class="text-muted small d-block">Price</span>
+                <span class="fs-3 fw-bold text-dark">₹ {{ product.price }}</span>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-bold text-dark mb-2">Full Description</h6>
+                <p class="text-muted small lh-relaxed mb-0" style="white-space: pre-line;">
+                    {{ product.description }}
+                </p>
+            </div>
+
+            <div class="border-top pt-3 mt-auto">
+                <div class="row text-muted small">
+                    <div class="col-6">
+                        <span>Product ID:</span> <strong class="text-dark">#{{ product.id }}</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
