@@ -48,15 +48,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
 ROOT_URLCONF = 'clocksy.urls'
 
 TEMPLATES = [
@@ -129,9 +129,7 @@ USE_TZ = True
 #     os.path.join(BASE_DIR, 'static')
 # ]
 
-from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
 
@@ -141,8 +139,8 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -161,16 +159,18 @@ STRIPE_SUCCESS_URL = config("STRIPE_SUCCESS_URL")
 STRIPE_CANCEL_URL = config("STRIPE_CANCEL_URL")
 
 
-cloudinary.config( 
-  cloud_name = "dvcp49ozv", 
-  api_key = "453384987593839", 
-  api_secret = "Oj2GrS2KqH649ME07mvppTiG1Lo",
-  secure=True
+cloudinary.config(
+    cloud_name=config("CLOUDINARY_CLOUD_NAME"),
+    api_key=config("CLOUDINARY_API_KEY"),
+    api_secret=config("CLOUDINARY_API_SECRET"),
+    secure=True
 )
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dvcp49ozv',
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
