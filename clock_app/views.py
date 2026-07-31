@@ -8,6 +8,7 @@ from django.db.models import Sum
 from django.contrib import messages
 import stripe
 from django.conf import settings
+import cloudinary.uploader
 stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 
@@ -490,22 +491,40 @@ def update_category(request, id):
     category = get_object_or_404(Category, id=id)
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        image = request.FILES.get('image')
+        category.name = request.POST.get('name')
 
-        category.name = name
-        if image:
-            category.image = image
+        new_image = request.FILES.get('image')
+
+        if new_image:
+            # Delete old image from Cloudinary
+            if category.image:
+                category.image.delete(save=False)
+
+            category.image = new_image
+
         category.save()
+
         messages.success(request, 'Category updated successfully!')
         return redirect('category_list')
 
-    return render(request, 'admin_panel/category_form.html', {'category': category, 'title': 'Edit Category'})
-
+    return render(request, 'admin_panel/category_form.html', {
+        'category': category,
+        'title': 'Edit Category'
+    })
+    
+    
 @staff_member_required(login_url='/custom-admin/login/')
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)
+
+    if category.image:
+        try:
+            category.image.delete(save=False)
+        except Exception as e:
+            print(e)
+
     category.delete()
+
     messages.success(request, 'Category deleted successfully!')
     return redirect('category_list')
 
@@ -537,22 +556,40 @@ def update_brand(request, id):
     brand = get_object_or_404(Brand, id=id)
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        image = request.FILES.get('image')
+        brand.name = request.POST.get('name')
 
-        brand.name = name
-        if image:
-            brand.image = image
+        new_image = request.FILES.get('image')
+
+        if new_image:
+            # Delete old image from Cloudinary
+            if brand.image:
+                brand.image.delete(save=False)
+
+            brand.image = new_image
+
         brand.save()
+
         messages.success(request, 'Brand updated successfully!')
         return redirect('brand_list')
 
-    return render(request, 'admin_panel/brand_form.html', {'brand': brand, 'title': 'Edit Brand'})
-
+    return render(request, 'admin_panel/brand_form.html', {
+        'brand': brand,
+        'title': 'Edit Brand'
+    })
+    
+    
 @staff_member_required(login_url='/custom-admin/login/')
 def delete_brand(request, id):
     brand = get_object_or_404(Brand, id=id)
+
+    if brand.image:
+        try:
+            brand.image.delete(save=False)
+        except Exception as e:
+            print(e)
+
     brand.delete()
+
     messages.success(request, 'Brand deleted successfully!')
     return redirect('brand_list')
 
@@ -608,35 +645,50 @@ def add_product(request):
     }
     return render(request, 'admin_panel/product_form.html', context)
 
-
 @staff_member_required(login_url='/custom-admin/login/')
 def update_product(request, id):
     product = get_object_or_404(Product, id=id)
+
     categories = Category.objects.all()
     brands = Brand.objects.all()
 
     if request.method == 'POST':
+
         product.name = request.POST.get('name')
-        
+
         category_id = request.POST.get('category')
         brand_id = request.POST.get('brand')
-        
+
         if category_id:
             product.category = Category.objects.get(id=category_id)
+
         if brand_id:
             product.brand = Brand.objects.get(id=brand_id)
 
         product.price = request.POST.get('price')
         product.description = request.POST.get('description')
 
-        if request.FILES.get('image1'):
-            product.image1 = request.FILES.get('image1')
-        if request.FILES.get('image2'):
-            product.image2 = request.FILES.get('image2')
-        if request.FILES.get('image3'):
-            product.image3 = request.FILES.get('image3')
+        image1 = request.FILES.get('image1')
+        image2 = request.FILES.get('image2')
+        image3 = request.FILES.get('image3')
+
+        if image1:
+            if product.image1:
+                product.image1.delete(save=False)
+            product.image1 = image1
+
+        if image2:
+            if product.image2:
+                product.image2.delete(save=False)
+            product.image2 = image2
+
+        if image3:
+            if product.image3:
+                product.image3.delete(save=False)
+            product.image3 = image3
 
         product.save()
+
         messages.success(request, 'Product updated successfully!')
         return redirect('admin_product_list')
 
@@ -644,15 +696,25 @@ def update_product(request, id):
         'title': 'Edit Product',
         'product': product,
         'categories': categories,
-        'brands': brands
+        'brands': brands,
     }
-    return render(request, 'admin_panel/product_form.html', context)
 
+    return render(request, 'admin_panel/product_form.html', context)
 
 @staff_member_required(login_url='/custom-admin/login/')
 def delete_product(request, id):
     product = get_object_or_404(Product, id=id)
+
+    # Delete images from Cloudinary
+    for image in [product.image1, product.image2, product.image3]:
+        if image:
+            try:
+                image.delete(save=False)
+            except Exception as e:
+                print(e)
+
     product.delete()
+
     messages.success(request, 'Product deleted successfully!')
     return redirect('admin_product_list')
 
