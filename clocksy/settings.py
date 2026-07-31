@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 from decouple import config # type: ignore
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'clock_app',
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -126,14 +129,20 @@ USE_TZ = True
 #     os.path.join(BASE_DIR, 'static')
 # ]
 
-STATIC_URL = 'static/'
+from pathlib import Path
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -150,3 +159,18 @@ STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY")
 
 STRIPE_SUCCESS_URL = config("STRIPE_SUCCESS_URL")
 STRIPE_CANCEL_URL = config("STRIPE_CANCEL_URL")
+
+
+cloudinary.config( 
+  cloud_name = "dvcp49ozv", 
+  api_key = "453384987593839", 
+  api_secret = "Oj2GrS2KqH649ME07mvppTiG1Lo",
+  secure=True
+)
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dvcp49ozv',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
