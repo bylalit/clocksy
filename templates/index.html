@@ -811,23 +811,23 @@
 
 <!-- 13. Login CTA Box (Shows when user is not authenticated) -->
 {% if not user.is_authenticated %}
-<section class="pb-5">
-    <div class="container">
-        <div class="login-cta-box text-center shadow">
-            <h3 class="fw-bold mb-2">LOGIN FOR THE BEST EXPERIENCE</h3>
-            <p class="text-slate-300 small mb-4">Track your orders, save items to your wishlist, and get exclusive luxury offers.</p>
-            
-            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                <a href="{% url 'login' %}" class="btn btn-gold text-decoration-none">
-                    LOGIN NOW
-                </a>
-                <a href="{% url 'register' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
-                    Create An Account
-                </a>
+    <section class="pb-5">
+        <div class="container">
+            <div class="login-cta-box text-center shadow">
+                <h3 class="fw-bold mb-2">LOGIN FOR THE BEST EXPERIENCE</h3>
+                <p class="text-slate-300 small mb-4">Track your orders, save items to your wishlist, and get exclusive luxury offers.</p>
+                
+                <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'login' %}" class="btn btn-gold text-decoration-none">
+                        LOGIN NOW
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
+                        Create An Account
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endif %}
 
 {% endblock %}

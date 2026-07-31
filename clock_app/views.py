@@ -15,12 +15,14 @@ def index(request):
     categories = Category.objects.all()
     brands = Brand.objects.all()
     products = Product.objects.all()[:8]
+    # print(products)
     wishlist_ids = []
     
     if request.user.is_authenticated:
         wishlist_ids = Wishlist.objects.filter(
             user=request.user
         ).values_list('product_id', flat=True)
+        
     return render(request, 'index.html', {'categories': categories, 'products': products, 'brands': brands, 'wishlist_ids': wishlist_ids})
 
 
@@ -693,3 +695,4 @@ def admin_order_detail(request, id):
         'order_items': order_items
     }
     return render(request, 'admin_panel/order_detail.html', context)
+
