@@ -269,7 +269,7 @@ def add_to_wishlist(request, product_id):
 
     return redirect(request.META.get("HTTP_REFERER", "index"))
 
-@login_required
+@login_required(login_url="/login")
 def wishlist_view(request):
     wishlist = Wishlist.objects.filter(user=request.user)
 
@@ -284,7 +284,7 @@ def wishlist_view(request):
 
     return render(request, 'wishlist.html', context)
 
-@login_required
+@login_required(login_url="/login")
 def remove_from_wishlist(request, product_id):
 
     Wishlist.objects.filter(
