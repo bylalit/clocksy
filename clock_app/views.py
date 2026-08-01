@@ -758,3 +758,9 @@ def admin_order_detail(request, id):
     }
     return render(request, 'admin_panel/order_detail.html', context)
 
+
+def redirect_to_home(request, path=None):
+    return redirect('index')
+
+# def custom_404(request, exception):
+#     return redirect("index")

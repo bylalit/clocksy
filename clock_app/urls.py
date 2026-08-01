@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -12,7 +12,7 @@ urlpatterns = [
     path('update_cart/<int:product_id>/<str:action>/', views.update_cart, name="update_cart"),
     path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name="remove_from_cart"),
     path('search_data/', views.search_page, name='search_data'),
-    path('category_brand_only/<str:brand>', views.category_brand_only, name='category_brand_only'), 
+    # path('category_brand_only/<str:brand>', views.category_brand_only, name='category_brand_only'), 
     path('login/', views.login_user, name="login"),
     path('logout/', views.logout_user, name="logout_user"),
     path('register/', views.register, name='register'),
@@ -50,5 +50,7 @@ urlpatterns = [
     # Customer Orders Management URLs
     path('custom-admin/orders/', views.admin_order_list, name='admin_order_list'),
     path('custom-admin/order/detail/<int:id>/', views.admin_order_detail, name='admin_order_detail'),
+    
+    # re_path(r'^.*$', views.redirect_to_home),
     
 ] 
